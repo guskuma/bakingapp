@@ -27,6 +27,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         Intent i = getIntent();
         mRecipe = (Recipe) Parcels.unwrap(i.getParcelableExtra(ARG_RECIPE));
 
+        getSupportActionBar().setTitle(mRecipe.name);
+
         RecipeDetailFragment detailFragment = RecipeDetailFragment.newInstance(mRecipe);
         getSupportFragmentManager().beginTransaction().add(R.id.detailPlaceHolder, detailFragment).commit();
     }

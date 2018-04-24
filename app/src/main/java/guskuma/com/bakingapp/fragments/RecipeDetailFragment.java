@@ -11,10 +11,13 @@ import android.widget.TextView;
 
 import org.parceler.Parcels;
 
+import java.text.DecimalFormat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import guskuma.com.bakingapp.R;
 import guskuma.com.bakingapp.adapter.StepsRecyclerViewAdapter;
+import guskuma.com.bakingapp.data.Ingredient;
 import guskuma.com.bakingapp.data.Recipe;
 import guskuma.com.bakingapp.data.Step;
 
@@ -74,13 +77,32 @@ public class RecipeDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, view);
+        String ingredients =  "";
 
-        txtIngredients.setText(mRecipe.name);
+        final DecimalFormat format = new DecimalFormat("0.#");
+
+        for (Ingredient i : mRecipe.ingredients) {
+            String quantity = format.format(i.quantity);
+            String measure = handleMeasure(i.measure);
+            ingredients += quantity + measure + i.ingredient + "; ";
+        }
+
+        txtIngredients.setText(ingredients);
 
         listSteps.setAdapter(new StepsRecyclerViewAdapter(mRecipe.steps, mListener));
 
-
         return view;
+    }
+
+    private String handleMeasure(String measure) {
+        if("UNIT".equals(measure)) {
+            return " ";
+        }
+
+        if("CUP".equals(measure) || "TSP".equals(measure) || "TBLSP".equals(measure))
+            return " " + measure.toLowerCase() + " ";
+
+        return measure.toLowerCase() + " ";
     }
 
     @Override

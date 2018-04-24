@@ -6,10 +6,6 @@
     android:name="guskuma.com.bakingapp.RecipesFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     tools:context=".fragments.RecipesFragment"
     tools:listitem="@layout/fragment_recipes" />

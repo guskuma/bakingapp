@@ -38,7 +38,8 @@ private final RecipeDetailFragment.OnStepClickListener mListener;
     public void onBindViewHolder(final StepsRecyclerViewAdapter.ViewHolder holder, int position) {
         holder.mItem = mSteps.get(position);
 
-        holder.mStepDescription.setText(holder.mItem.shortDescription);
+        holder.mStepDescription.setText( ++position + " - " + holder.mItem.shortDescription);
+        holder.mDescription.setText(holder.mItem.description);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +61,7 @@ private final RecipeDetailFragment.OnStepClickListener mListener;
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         @BindView(R.id.txtShortDescription) public TextView mStepDescription;
+        @BindView(R.id.txtDescription) public TextView mDescription;
         public Step mItem;
 
         public ViewHolder(View view) {
