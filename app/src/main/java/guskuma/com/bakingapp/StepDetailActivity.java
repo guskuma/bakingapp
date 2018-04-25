@@ -15,7 +15,7 @@ import guskuma.com.bakingapp.data.Step;
 import guskuma.com.bakingapp.fragments.StepDetailFragment;
 import timber.log.Timber;
 
-public class StepDetailActivity extends AppCompatActivity {
+public class StepDetailActivity extends AppCompatActivity implements StepDetailFragment.StepDetailInteractionListener {
 
     public static final String ARG_STEP_LIST = "step_list_extra";
     public static final String ARG_STEP_INDEX = "step_index_extra";
@@ -56,4 +56,13 @@ public class StepDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onNextStepButtonClick(List<Step> stepList, int stepIndex) {
+        Timber.i("Next clicked");
+    }
+
+    @Override
+    public void onPreviousStepButtonClick(List<Step> stepList, int stepIndex) {
+        Timber.i("Previous clicked");
+    }
 }

@@ -1,5 +1,6 @@
 package guskuma.com.bakingapp.fragments;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,12 +47,11 @@ public class StepDetailFragment extends Fragment {
     private int mStepIndex;
     private SimpleExoPlayer player;
 
+    private StepDetailInteractionListener mListener;
+
     @BindView(R.id.txtStepDescription) TextView txtStepDescription;
-
     @BindView(R.id.mediaPlayer) SimpleExoPlayerView mediaPlayer;
-
     @BindView(R.id.btnNextStep) Button btnNextStep;
-
     @BindView(R.id.btnPreviousStep) Button btnPreviousStep;
 
     public StepDetailFragment() {
@@ -91,7 +91,33 @@ public class StepDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
         ButterKnife.bind(this, view);
         txtStepDescription.setText(mStep.description);
+
+        btnNextStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onNextStepButtonClick(mStepList, mStepIndex +1);
+            }
+        });
+
+        btnPreviousStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onPreviousStepButtonClick(mStepList, mStepIndex -1);
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof StepDetailInteractionListener) {
+            mListener = (StepDetailInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement StepDetailInteractionListener");
+        }
     }
 
     private void initializePlayer(String videoUrl) {
@@ -129,7 +155,6 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-// hideSystemUi();
         if ((Util.SDK_INT <= 23 || player == null)) {
             initializePlayer(mStep.videoURL);
         }
@@ -150,14 +175,17 @@ public class StepDetailFragment extends Fragment {
             releasePlayer();
         }
     }
+
     private void releasePlayer() {
         if (player != null) {
-//    playbackPosition = player.getCurrentPosition();
-//    currentWindow = player.getCurrentWindowIndex();
-//    playWhenReady = player.getPlayWhenReady();
             player.release();
             player = null;
         }
+    }
+
+    public interface StepDetailInteractionListener {
+        public void onNextStepButtonClick(List<Step> stepList, int stepIndex);
+        public void onPreviousStepButtonClick(List<Step> stepList, int stepIndex);
     }
 
 }
