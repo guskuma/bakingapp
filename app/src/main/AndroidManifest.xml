@@ -27,6 +27,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guskuma.com.bakingapp.MainActivity" />
         </activity>
+        <activity
+            android:name=".StepDetailActivity"
+            android:label="@string/title_activity_step_detail"
+            android:parentActivityName=".RecipeDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="guskuma.com.bakingapp.RecipeDetailActivity" />
+        </activity>
     </application>
 
 </manifest>

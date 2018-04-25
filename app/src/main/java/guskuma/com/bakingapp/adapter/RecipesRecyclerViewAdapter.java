@@ -12,19 +12,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import guskuma.com.bakingapp.R;
 import guskuma.com.bakingapp.data.Recipe;
-import guskuma.com.bakingapp.fragments.RecipesFragment.OnRecipeClickListener;
+import guskuma.com.bakingapp.fragments.RecipesFragment.RecipeInteractionListener;
 import timber.log.Timber;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Recipe} and makes a call to the
- * specified {@link OnRecipeClickListener}.
+ * specified {@link RecipeInteractionListener}.
  */
 public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecyclerViewAdapter.ViewHolder> {
 
     private final List<Recipe> mValues;
-    private final OnRecipeClickListener mListener;
+    private final RecipeInteractionListener mListener;
 
-    public RecipesRecyclerViewAdapter(List<Recipe> items, OnRecipeClickListener listener) {
+    public RecipesRecyclerViewAdapter(List<Recipe> items, RecipeInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -54,7 +54,7 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onRecipeClick(holder.mItem);
                 }
             }
         });

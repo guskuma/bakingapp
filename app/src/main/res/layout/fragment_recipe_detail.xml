@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<ScrollView
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,48 +7,54 @@
     android:layout_height="match_parent"
     tools:context=".fragments.RecipeDetailFragment">
 
-    <TextView
-        android:id="@+id/txtIngredientsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/recipe_ingredients"
-        android:textSize="@dimen/text_big"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/txtIngredients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtIngredientsTitle"
-        tools:text="2 CUP Graham Cracker crumbs; 6 TBLP unsalted butter, melted;" />
-
-    <TextView
-        android:id="@+id/txtStepsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/recipe_steps"
-        android:textSize="@dimen/text_big"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtIngredients" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/listSteps"
+    <android.support.constraint.ConstraintLayout
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/txtStepsTitle"
-        app:layout_constraintTop_toBottomOf="@id/txtStepsTitle"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_height="wrap_content">
 
-    </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/txtIngredientsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recipe_ingredients"
+            android:textSize="@dimen/text_big"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/txtIngredients"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtIngredientsTitle"
+            android:layout_marginTop="8dp"
+            tools:text="2 CUP Graham Cracker crumbs; 6 TBLP unsalted butter, melted;" />
+
+        <TextView
+            android:id="@+id/txtStepsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/recipe_steps"
+            android:textSize="@dimen/text_big"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtIngredients" />
+
+        <LinearLayout
+            android:id="@+id/stepsPlaceHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtStepsTitle">
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

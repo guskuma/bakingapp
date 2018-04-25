@@ -11,7 +11,7 @@ import guskuma.com.bakingapp.data.Recipe;
 import guskuma.com.bakingapp.fragments.RecipesFragment;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements RecipesFragment.OnRecipeClickListener {
+public class MainActivity extends AppCompatActivity implements RecipesFragment.RecipeInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +20,14 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
         ButterKnife.bind(this);
         Timber.plant(new Timber.DebugTree());
 
-        RecipesFragment recipesFragment = RecipesFragment.newInstance(1);
-        getSupportFragmentManager().beginTransaction().add(R.id.recipeListContainer, recipesFragment).commit();
+        if(getSupportFragmentManager().findFragmentByTag(RecipesFragment.TAG) == null) {
+            RecipesFragment recipesFragment = RecipesFragment.newInstance(1);
+            getSupportFragmentManager().beginTransaction().add(R.id.recipeListContainer, recipesFragment, RecipesFragment.TAG).commit();
+        }
     }
 
     @Override
-    public void onListFragmentInteraction(Recipe item) {
+    public void onRecipeClick(Recipe item) {
         Timber.v("Recipe clicked: " + item.name);
         Intent i = new Intent(this, RecipeDetailActivity.class);
         i.putExtra(RecipeDetailActivity.ARG_RECIPE, Parcels.wrap(item));

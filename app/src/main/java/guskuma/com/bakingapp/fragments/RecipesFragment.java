@@ -30,15 +30,17 @@ import timber.log.Timber;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnRecipeClickListener}
+ * Activities containing this fragment MUST implement the {@link RecipeInteractionListener}
  * interface.
  */
 public class RecipesFragment extends Fragment {
 
+    public static final String TAG = "FRAG+RECIPES_LIST";
+
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private RecipeService mRecipeService;
-    private OnRecipeClickListener mListener;
+    private RecipeInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -114,11 +116,11 @@ public class RecipesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnRecipeClickListener) {
-            mListener = (OnRecipeClickListener) context;
+        if (context instanceof RecipeInteractionListener) {
+            mListener = (RecipeInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnRecipeClickListener");
+                    + " must implement RecipeInteractionListener");
         }
     }
 
@@ -138,7 +140,7 @@ public class RecipesFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnRecipeClickListener {
-        void onListFragmentInteraction(Recipe item);
+    public interface RecipeInteractionListener {
+        void onRecipeClick(Recipe item);
     }
 }

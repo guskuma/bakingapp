@@ -3,43 +3,44 @@ package guskuma.com.bakingapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.parceler.Parcels;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import guskuma.com.bakingapp.R;
-import guskuma.com.bakingapp.adapter.StepsRecyclerViewAdapter;
 import guskuma.com.bakingapp.data.Ingredient;
 import guskuma.com.bakingapp.data.Recipe;
 import guskuma.com.bakingapp.data.Step;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnStepClickListener} interface
+ * {@link RecipeDetailInteractionListener} interface
  * to handle interaction events.
  * Use the {@link RecipeDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class RecipeDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_RECIPE_OBJECT = "recipe_object";
 
+    public static final String TAG = "frag_recipedetail_tag";
+
+    private static final String ARG_RECIPE_OBJECT = "recipe_object";
     private Recipe mRecipe;
 
-    private OnStepClickListener mListener;
+    private RecipeDetailInteractionListener mListener;
 
     @BindView(R.id.txtIngredients) TextView txtIngredients;
-    @BindView(R.id.listSteps) RecyclerView listSteps;
+    @BindView(R.id.stepsPlaceHolder) LinearLayout stepsPlaceHolder;
 
 
     public RecipeDetailFragment() {
@@ -53,7 +54,6 @@ public class RecipeDetailFragment extends Fragment {
      * @param recipe Recipe object to show
      * @return A new instance of fragment RecipeDetailFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static RecipeDetailFragment newInstance(Recipe recipe) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
         Bundle args = new Bundle();
@@ -65,6 +65,7 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.plant(new Timber.DebugTree());
 
         if (getArguments() != null) {
             mRecipe = (Recipe) Parcels.unwrap(getArguments().getParcelable(ARG_RECIPE_OBJECT));
@@ -89,7 +90,30 @@ public class RecipeDetailFragment extends Fragment {
 
         txtIngredients.setText(ingredients);
 
-        listSteps.setAdapter(new StepsRecyclerViewAdapter(mRecipe.steps, mListener));
+        for(final Step s : mRecipe.steps){
+            View v = inflater.inflate(R.layout.fragment_recipe_detail_step, stepsPlaceHolder, false);
+            TextView txtCircleNumber = (TextView)v.findViewById(R.id.txtCircleNumber);
+            TextView txtShortDescription = (TextView)v.findViewById(R.id.txtShortDescription);
+            TextView txtDescription = (TextView)v.findViewById(R.id.txtDescription);
+            View vwDivider = (View)v.findViewById(R.id.divider);
+
+            if(s.id == 0) {
+                vwDivider.setVisibility(View.GONE);
+            }
+
+            txtCircleNumber.setText(String.valueOf(s.id));
+            txtShortDescription.setText( s.shortDescription);
+            txtDescription.setText(s.description);
+
+            stepsPlaceHolder.addView(v);
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onStepClick(mRecipe.steps, s.id);
+                }
+            });
+        }
 
         return view;
     }
@@ -108,11 +132,11 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnStepClickListener) {
-            mListener = (OnStepClickListener) context;
+        if (context instanceof RecipeDetailInteractionListener) {
+            mListener = (RecipeDetailInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnStepClickListener");
+                    + " must implement RecipeDetailInteractionListener");
         }
     }
 
@@ -132,7 +156,7 @@ public class RecipeDetailFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnStepClickListener {
-        void onFragmentInteraction(Step step);
+    public interface RecipeDetailInteractionListener {
+        void onStepClick(List<Step> stepList, int stepIndex);
     }
 }
