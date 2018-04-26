@@ -42,6 +42,7 @@ public class RecipesFragment extends Fragment {
     private RecipeService mRecipeService;
     private RecipeInteractionListener mListener;
 
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -80,6 +81,7 @@ public class RecipesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipes_list, container, false);
+
         final List<Recipe> recipes = new ArrayList<>();
 
         // Set the adapter

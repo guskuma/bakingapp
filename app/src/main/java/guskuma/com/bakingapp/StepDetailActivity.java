@@ -19,9 +19,10 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
 
     public static final String ARG_STEP_LIST = "step_list_extra";
     public static final String ARG_STEP_INDEX = "step_index_extra";
-    public static final String ARG_STEP_NAME = "step_name_extra";
+    public static final String ARG_RECIPE_NAME = "recipe_name_extra";
     private List<Step> mStepList;
     private int mStepIndex;
+    private String mRecipeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +32,32 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
         Timber.plant(new Timber.DebugTree());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
         mStepList = (List<Step>) Parcels.unwrap(intent.getParcelableExtra(ARG_STEP_LIST));
         mStepIndex = intent.getIntExtra(ARG_STEP_INDEX, -1);
-        getSupportActionBar().setTitle(intent.getStringExtra(ARG_STEP_NAME));
+        mRecipeName = intent.getStringExtra(ARG_RECIPE_NAME);
+
+        if(savedInstanceState != null)
+            mStepIndex = savedInstanceState.getInt(ARG_STEP_INDEX);
+
+        setActivityTitle();
 
         if(getSupportFragmentManager().findFragmentByTag(StepDetailFragment.TAG) == null) {
             StepDetailFragment fragment = StepDetailFragment.newInstance(mStepList, mStepIndex);
             getSupportFragmentManager().beginTransaction().add(R.id.stepDetailPlaceHolder, fragment, StepDetailFragment.TAG).commit();
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ARG_STEP_INDEX, mStepIndex);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -58,11 +72,27 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
 
     @Override
     public void onNextStepButtonClick(List<Step> stepList, int stepIndex) {
-        Timber.i("Next clicked");
+        Timber.i("Next clicked: " + stepIndex);
+        resetFragment(stepList, stepIndex);
     }
 
     @Override
     public void onPreviousStepButtonClick(List<Step> stepList, int stepIndex) {
-        Timber.i("Previous clicked");
+        Timber.i("Previous clicked: " + stepIndex);
+        resetFragment(stepList, stepIndex);
+    }
+
+    private void resetFragment(List<Step> stepList, int stepIndex) {
+        StepDetailFragment fragment = (StepDetailFragment) getSupportFragmentManager().findFragmentByTag(StepDetailFragment.TAG);
+        fragment.resetVisualization(stepList, stepIndex);
+        mStepIndex = stepIndex;
+        setActivityTitle();
+    }
+
+    private void setActivityTitle(){
+        String stepName = String.format(getResources().getString(R.string.step_name), (mStepIndex+1), mStepList.size(), mRecipeName);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(stepName);
+        }
     }
 }

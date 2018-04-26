@@ -8,4 +8,7 @@
     <string name="title_activity_step_detail">StepDetailActivity</string>
     <string name="previous_step">Previous Step</string>
     <string name="next_step">Next Step</string>
+    <string name="video_player_error">Error while trying to play video</string>
+    <string name="video_player_loading">Loading video. Please wait</string>
+    <string name="video_player_no_video">No video avaible</string>
 </resources>

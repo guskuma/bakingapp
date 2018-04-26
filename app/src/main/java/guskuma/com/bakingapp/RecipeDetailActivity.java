@@ -45,12 +45,10 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     @Override
     public void onStepClick(List<Step> stepList, int stepIndex) {
 
-        String stepName = String.format(getResources().getString(R.string.step_name), (stepIndex+1), mRecipe.steps.size(), mRecipe.name);
-
         Intent stepDetailIntent = new Intent(this, StepDetailActivity.class);
         stepDetailIntent.putExtra(StepDetailActivity.ARG_STEP_LIST, Parcels.wrap(stepList));
         stepDetailIntent.putExtra(StepDetailActivity.ARG_STEP_INDEX, stepIndex);
-        stepDetailIntent.putExtra(StepDetailActivity.ARG_STEP_NAME, stepName);
+        stepDetailIntent.putExtra(StepDetailActivity.ARG_RECIPE_NAME, mRecipe.name);
         startActivity(stepDetailIntent);
     }
 

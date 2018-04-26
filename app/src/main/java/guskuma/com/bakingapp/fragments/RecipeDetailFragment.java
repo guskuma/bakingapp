@@ -16,6 +16,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import guskuma.com.bakingapp.R;
 import guskuma.com.bakingapp.data.Ingredient;
 import guskuma.com.bakingapp.data.Recipe;
@@ -42,6 +43,7 @@ public class RecipeDetailFragment extends Fragment {
     @BindView(R.id.txtIngredients) TextView txtIngredients;
     @BindView(R.id.stepsPlaceHolder) LinearLayout stepsPlaceHolder;
 
+     private Unbinder unbinder;
 
     public RecipeDetailFragment() {
         // Required empty public constructor
@@ -77,7 +79,7 @@ public class RecipeDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         String ingredients =  "";
 
         final DecimalFormat format = new DecimalFormat("0.#");
@@ -92,16 +94,16 @@ public class RecipeDetailFragment extends Fragment {
 
         for(final Step s : mRecipe.steps){
             View v = inflater.inflate(R.layout.fragment_recipe_detail_step, stepsPlaceHolder, false);
-            TextView txtCircleNumber = (TextView)v.findViewById(R.id.txtCircleNumber);
-            TextView txtShortDescription = (TextView)v.findViewById(R.id.txtShortDescription);
-            TextView txtDescription = (TextView)v.findViewById(R.id.txtDescription);
-            View vwDivider = (View)v.findViewById(R.id.divider);
+            TextView txtCircleNumber = v.findViewById(R.id.txtCircleNumber);
+            TextView txtShortDescription = v.findViewById(R.id.txtShortDescription);
+            TextView txtDescription = v.findViewById(R.id.txtDescription);
+            View vwDivider = v.findViewById(R.id.divider);
 
             if(s.id == 0) {
                 vwDivider.setVisibility(View.GONE);
             }
 
-            txtCircleNumber.setText(String.valueOf(s.id));
+            txtCircleNumber.setText(String.valueOf(s.id+1));
             txtShortDescription.setText( s.shortDescription);
             txtDescription.setText(s.description);
 
@@ -144,6 +146,12 @@ public class RecipeDetailFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     /**
