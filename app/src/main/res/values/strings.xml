@@ -11,4 +11,5 @@
     <string name="video_player_error">Error while trying to play video</string>
     <string name="video_player_loading">Loading video. Please wait</string>
     <string name="video_player_no_video">No video avaible</string>
+    <string name="recipe_name_with_steps">%s - Step %d of %d</string>
 </resources>
