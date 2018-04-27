@@ -230,6 +230,9 @@ public class StepDetailFragment extends Fragment {
             player.setPlayWhenReady(true);
             txtVideoContainer.setText(R.string.video_player_loading);
             player.addListener(new Player.EventListener() {
+
+                boolean sucessfullyLoaded = true;
+
                 @Override
                 public void onTimelineChanged(Timeline timeline, Object manifest) {
 
@@ -242,7 +245,7 @@ public class StepDetailFragment extends Fragment {
 
                 @Override
                 public void onLoadingChanged(boolean isLoading) {
-                    if(!isLoading && mediaPlayerViewer != null){
+                    if(!isLoading && sucessfullyLoaded && mediaPlayerViewer != null){
                         mediaPlayerViewer.setVisibility(View.VISIBLE);
                         mediaPlayerViewer.bringToFront();
                     }
@@ -266,6 +269,7 @@ public class StepDetailFragment extends Fragment {
                 @Override
                 public void onPlayerError(ExoPlaybackException error) {
                     txtVideoContainer.setText(R.string.video_player_error);
+                    sucessfullyLoaded = false;
                     Toast.makeText(getContext(), R.string.video_player_error, Toast.LENGTH_LONG).show();
                 }
 

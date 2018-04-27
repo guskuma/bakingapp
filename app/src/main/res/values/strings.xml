@@ -12,4 +12,6 @@
     <string name="video_player_loading">Loading video. Please wait</string>
     <string name="video_player_no_video">No video avaible</string>
     <string name="recipe_name_with_steps">%s - Step %d of %d</string>
+    <string name="try_again">Try again</string>
+    <string name="recipe_list_fetch_fail">Failed to fetch recipe list</string>
 </resources>

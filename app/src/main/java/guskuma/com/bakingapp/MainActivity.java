@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import guskuma.com.bakingapp.adapter.RecipesRecyclerViewAdapter;
 import guskuma.com.bakingapp.data.Recipe;
 import guskuma.com.bakingapp.data.RecipeService;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements RecipesRecyclerVi
 
     private RecipeService mRecipeService;
     @BindView(R.id.listRecipes) RecyclerView recyclerView;
+    @BindView(R.id.btnTryAgain) Button btnTryAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,15 @@ public class MainActivity extends AppCompatActivity implements RecipesRecyclerVi
     protected void onStart() {
         super.onStart();
 
+        fetchRecipeList();
+
+        if(recyclerView.getLayoutManager() instanceof GridLayoutManager){
+            GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+            layoutManager.setSpanCount(3);
+        }
+    }
+
+    private void fetchRecipeList() {
         final List<Recipe> recipes = new ArrayList<>();
 
         Call<List<Recipe>> call = mRecipeService.getRecipes();
@@ -60,18 +74,18 @@ public class MainActivity extends AppCompatActivity implements RecipesRecyclerVi
                 recipes.addAll(response.body());
                 Timber.v(recipes.size() + " recipes retrieved");
                 recyclerView.setAdapter(new RecipesRecyclerViewAdapter(recipes, MainActivity.this));
+                recyclerView.setVisibility(View.VISIBLE);
+                btnTryAgain.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 Timber.e(t);
+                Toast.makeText(MainActivity.this, R.string.recipe_list_fetch_fail, Toast.LENGTH_LONG).show();
+                recyclerView.setVisibility(View.GONE);
+                btnTryAgain.setVisibility(View.VISIBLE);
             }
         });
-
-        if(recyclerView.getLayoutManager() instanceof GridLayoutManager){
-            GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-            layoutManager.setSpanCount(3);
-        }
     }
 
     @Override
@@ -80,5 +94,10 @@ public class MainActivity extends AppCompatActivity implements RecipesRecyclerVi
         Intent i = new Intent(this, RecipeDetailActivity.class);
         i.putExtra(RecipeDetailActivity.ARG_RECIPE, Parcels.wrap(item));
         startActivity(i);
+    }
+
+    @OnClick(R.id.btnTryAgain)
+    public void onTryAgainClick(View view){
+        fetchRecipeList();
     }
 }
