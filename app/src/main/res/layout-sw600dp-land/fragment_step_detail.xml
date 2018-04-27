@@ -55,6 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/mediaPlayerContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         tools:text="1. Preheat the oven to 350\u00b0F. Butter a 9 deep dish pie pan." />
 
 </android.support.constraint.ConstraintLayout>

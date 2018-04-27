@@ -106,6 +106,7 @@ public class StepDetailFragment extends Fragment {
     }
 
     public void resetVisualization(List<Step> stepList, int stepIndex){
+        releasePlayer();
         setStepInfo(stepList, stepIndex);
         setStepDescription();
         configureNavigationButtons();

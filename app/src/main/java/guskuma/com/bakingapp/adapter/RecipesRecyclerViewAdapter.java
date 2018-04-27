@@ -12,7 +12,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import guskuma.com.bakingapp.R;
 import guskuma.com.bakingapp.data.Recipe;
-import guskuma.com.bakingapp.fragments.RecipesFragment.RecipeInteractionListener;
 import timber.log.Timber;
 
 /**
@@ -81,5 +80,9 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
         public String toString() {
             return super.toString() + " '" + mRecipeName.getText() + "'";
         }
+    }
+
+    public interface RecipeInteractionListener {
+        void onRecipeClick(Recipe item);
     }
 }
