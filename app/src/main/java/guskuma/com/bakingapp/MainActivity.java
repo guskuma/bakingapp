@@ -1,19 +1,24 @@
 package guskuma.com.bakingapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.parceler.Parcels;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements RecipesRecyclerVi
     private RecipeService mRecipeService;
     @BindView(R.id.listRecipes) RecyclerView recyclerView;
     @BindView(R.id.btnTryAgain) Button btnTryAgain;
+    @BindView(R.id.loading) ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +72,12 @@ public class MainActivity extends AppCompatActivity implements RecipesRecyclerVi
     private void fetchRecipeList() {
         final List<Recipe> recipes = new ArrayList<>();
 
+        progressBar.setVisibility(View.VISIBLE);
+
         Call<List<Recipe>> call = mRecipeService.getRecipes();
         call.enqueue(new Callback<List<Recipe>>() {
+            private final String pref_key = getResources().getString(R.string.preference_recipe_list);
+
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 recipes.clear();
@@ -76,14 +86,34 @@ public class MainActivity extends AppCompatActivity implements RecipesRecyclerVi
                 recyclerView.setAdapter(new RecipesRecyclerViewAdapter(recipes, MainActivity.this));
                 recyclerView.setVisibility(View.VISIBLE);
                 btnTryAgain.setVisibility(View.GONE);
+
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+                editor.putString(pref_key, new Gson().toJson(recipes));
+                editor.apply();
+
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 Timber.e(t);
-                Toast.makeText(MainActivity.this, R.string.recipe_list_fetch_fail, Toast.LENGTH_LONG).show();
-                recyclerView.setVisibility(View.GONE);
-                btnTryAgain.setVisibility(View.VISIBLE);
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                if(prefs.contains(pref_key)){
+                    Toast.makeText(MainActivity.this, R.string.recipe_list_fetch_fail_getting_from_preferences, Toast.LENGTH_LONG).show();
+                    Type listType = new TypeToken<ArrayList<Recipe>>(){}.getType();
+                    recipes.clear();
+                    recipes.addAll((List<Recipe>) new Gson().fromJson(prefs.getString(pref_key, ""), listType));
+                    recyclerView.setAdapter(new RecipesRecyclerViewAdapter(recipes, MainActivity.this));
+                    recyclerView.setVisibility(View.VISIBLE);
+                    btnTryAgain.setVisibility(View.GONE);
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.recipe_list_fetch_fail, Toast.LENGTH_LONG).show();
+                    recyclerView.setVisibility(View.GONE);
+                    btnTryAgain.setVisibility(View.VISIBLE);
+                }
+
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

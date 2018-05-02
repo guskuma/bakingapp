@@ -11,14 +11,12 @@ import android.widget.TextView;
 
 import org.parceler.Parcels;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import guskuma.com.bakingapp.R;
-import guskuma.com.bakingapp.data.Ingredient;
 import guskuma.com.bakingapp.data.Recipe;
 import guskuma.com.bakingapp.data.Step;
 import timber.log.Timber;
@@ -80,17 +78,8 @@ public class RecipeDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
-        String ingredients =  "";
 
-        final DecimalFormat format = new DecimalFormat("0.#");
-
-        for (Ingredient i : mRecipe.ingredients) {
-            String quantity = format.format(i.quantity);
-            String measure = handleMeasure(i.measure);
-            ingredients += quantity + measure + i.ingredient + "; ";
-        }
-
-        txtIngredients.setText(ingredients);
+        txtIngredients.setText(mRecipe.getIngredientsText());
 
         for(final Step s : mRecipe.steps){
             View v = inflater.inflate(R.layout.fragment_recipe_detail_step, stepsPlaceHolder, false);
@@ -118,17 +107,6 @@ public class RecipeDetailFragment extends Fragment {
         }
 
         return view;
-    }
-
-    private String handleMeasure(String measure) {
-        if("UNIT".equals(measure)) {
-            return " ";
-        }
-
-        if("CUP".equals(measure) || "TSP".equals(measure) || "TBLSP".equals(measure))
-            return " " + measure.toLowerCase() + " ";
-
-        return measure.toLowerCase() + " ";
     }
 
     @Override

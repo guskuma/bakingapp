@@ -14,4 +14,10 @@
     <string name="recipe_name_with_steps">%s - Step %d of %d</string>
     <string name="try_again">Try again</string>
     <string name="recipe_list_fetch_fail">Failed to fetch recipe list</string>
+    <string name="appwidget_text">Banoffee Pie</string>
+    <string name="select_recipe">Select recipe</string>
+    <string name="add_widget">Add widget</string>
+    <string name="preference_recipe_list">pref_recipes_list</string>
+    <string name="recipe_list_fetch_fail_getting_from_preferences">Failed to fech recipe list from internet.\nUsing last version downloaded.</string>
+    <string name="no_recipes_available_yet">No recipes available. Please use app first.</string>
 </resources>
